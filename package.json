@@ -1,0 +1,25 @@
+{
+  "name": "webrtc-pool-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "tslint --fix ./src/**/*.ts ./tests/**/*.ts",
+    "build": "npm run lint && rm -rf dist && tsc --outDir dist",
+    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 tests/**/*.test.ts"
+  },
+  "dependencies": {
+    "log4js": "^3.0.6",
+    "wrtc": "^0.3.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^8.0.1",
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.2.2"
+  }
+}
