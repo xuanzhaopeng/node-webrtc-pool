@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "log4js": "^3.0.6",
-    "wrtc": "^0.3.4"
+    "wrtc": "^0.3.5"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
