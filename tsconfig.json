@@ -60,6 +60,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "tests/**/*.ts"
+    "test/**/*.ts"
   ]
 }

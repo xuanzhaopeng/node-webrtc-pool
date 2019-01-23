@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "lint": "tslint --fix ./src/**/*.ts ./tests/**/*.ts",
+    "lint": "tslint --fix ./src/**/*.ts ./test/**/*.ts",
     "build": "npm run lint && rm -rf dist && tsc --outDir dist",
-    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 tests/**/*.test.ts"
+    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 test/**/*.test.ts"
   },
   "dependencies": {
     "log4js": "^3.0.6",
