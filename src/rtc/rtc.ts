@@ -2,7 +2,7 @@ import { PCLogger } from '../logger';
 
 export namespace Rtc {
   const webrtc:any = require('wrtc');
-  export function createPeerConnection(nickName:string, configuration = {}):any {
+  export function createPeerConnection(nickName:string, configuration:RTCConfiguration):any {
     PCLogger.debug(`[${nickName}] creating RTC Peer connection with:configuration:${JSON.stringify(configuration)}}`);
     return new webrtc.RTCPeerConnection(configuration);
   }

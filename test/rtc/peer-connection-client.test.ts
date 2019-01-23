@@ -1,5 +1,5 @@
 import { PeerConnectionClient } from '../../src/rtc/peer-connection-client';
-import { mockSdp, mockStream } from '../mock';
+import { defaultPeerConnectionConfig, mockSdp, mockStream } from '../mock';
 const expect = require('chai').expect;
 
 describe('peer connection client',  () => {
@@ -44,7 +44,7 @@ describe('peer connection client',  () => {
     });
 
     beforeEach(async () => {
-      pcc = await new PeerConnectionClient(pccNickName);
+      pcc = await new PeerConnectionClient(pccNickName, defaultPeerConnectionConfig);
     });
 
     afterEach(async () => {

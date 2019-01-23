@@ -8,7 +8,7 @@ export class PeerConnectionClient {
   private readonly remoteCandidates: RTCIceCandidate[];
   private readonly streams:MediaStream[];
 
-  constructor(nickName: string, configuration = {}) {
+  constructor(nickName: string, configuration:RTCConfiguration) {
     this.nickName = nickName;
     this.localCandidates = [];
     this.remoteCandidates = [];
@@ -27,6 +27,7 @@ export class PeerConnectionClient {
       stream.getTracks().forEach(track => track.stop());
     });
     this.peerConnection.close();
+    PCLogger.debug(`[${this.nickName}] connection closed`);
   }
 
   createOffer(options?: RTCOfferOptions):Promise<RTCSessionDescription> {
