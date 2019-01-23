@@ -2,12 +2,12 @@ import { PeerConnectionClient } from '../../src/rtc/peer-connection-client';
 import { mockPeerConnectionClient, sleep } from '../mock';
 const expect = require('chai').expect;
 
-describe('ice candidate', () => {
+describe('peer connection client', () => {
 
   let me: PeerConnectionClient;
   let you: PeerConnectionClient;
 
-  it('local candidate received', async () => {
+  it('receive local candidate', async () => {
     me = await mockPeerConnectionClient('p1');
     const offer = await me.createOffer();
     await me.setLocalSDP(offer);
@@ -15,7 +15,7 @@ describe('ice candidate', () => {
     expect(me.getLocalCandidates()).to.have.lengthOf.above(1);
   });
 
-  it('remote candidate received', async () => {
+  it('receive remote candidate', async () => {
     me = await mockPeerConnectionClient('p1');
     you = await mockPeerConnectionClient('p2');
 

@@ -2,16 +2,12 @@ import { PeerConnectionClient } from '../../src/rtc/peer-connection-client';
 import { mockSdp, mockStream } from '../mock';
 const expect = require('chai').expect;
 
-describe('Peer connection client',  () => {
+describe('peer connection client',  () => {
   {
     let pcc:PeerConnectionClient;
     const pccNickName = 'p1';
     const mockedSdp = mockSdp();
     const mockedStreamF: Promise<MediaStream> = mockStream();
-
-    it('constructor', () => {
-      expect(pcc).to.not.be.null;
-    });
 
     it('get connection state', () => {
       expect(pcc.getConnectionState()).equal('new');
@@ -34,12 +30,12 @@ describe('Peer connection client',  () => {
       expect(pcc.getLocalSdp().type).equals(offer.type);
     });
 
-    it('create answer failed', async () => {
+    it('create answer with error', async () => {
       const answer = await pcc.createAnswer();
       expect(answer).is.an('error');
     });
 
-    it('create answer success', async () => {
+    it('create answer successfully', async () => {
       await pcc.setRemoteSDP(mockedSdp);
       const answer = await pcc.createAnswer();
       expect(answer).to.not.be.undefined.and.not.an('error');
