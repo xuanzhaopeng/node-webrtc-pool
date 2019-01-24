@@ -1,12 +1,14 @@
 import { PeerConnectionClient } from '../../src/rtc/peer-connection-client';
-import { defaultPeerConnectionConfig, mockSdp, mockStream } from '../mock';
-const expect = require('chai').expect;
+import { mockedPeerConnectionConfig, mockedSdp, mockStream } from '../mock';
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe('peer connection client',  () => {
   {
     let pcc:PeerConnectionClient;
     const pccNickName = 'p1';
-    const mockedSdp = mockSdp();
     const mockedStreamF: Promise<MediaStream> = mockStream();
 
     it('get connection state', () => {
@@ -30,9 +32,8 @@ describe('peer connection client',  () => {
       expect(pcc.getLocalSdp().type).equals(offer.type);
     });
 
-    it('create answer with error', async () => {
-      const answer = await pcc.createAnswer();
-      expect(answer).is.an('error');
+    it('create answer with error', (done) => {
+      expect(pcc.createAnswer()).to.be.rejectedWith(Error).notify(done);
     });
 
     it('create answer successfully', async () => {
@@ -44,7 +45,7 @@ describe('peer connection client',  () => {
     });
 
     beforeEach(async () => {
-      pcc = await new PeerConnectionClient(pccNickName, defaultPeerConnectionConfig);
+      pcc = await new PeerConnectionClient(pccNickName, mockedPeerConnectionConfig);
     });
 
     afterEach(async () => {

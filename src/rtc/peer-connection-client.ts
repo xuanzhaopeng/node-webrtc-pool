@@ -1,18 +1,21 @@
 import { Rtc } from './rtc';
 import { PCLogger } from '../logger';
+import { IncomeTrackStrategy } from './income-track-strategy';
 
 export class PeerConnectionClient {
   private peerConnection: any;
   private readonly nickName: string;
-  private readonly localCandidates:RTCIceCandidate[];
-  private readonly remoteCandidates: RTCIceCandidate[];
+  private readonly localCandidates:RTCIceCandidateInit[];
+  private readonly remoteCandidates: RTCIceCandidateInit[];
   private readonly streams:MediaStream[];
+  private readonly incomeTrackStrategy: IncomeTrackStrategy;
 
-  constructor(nickName: string, configuration:RTCConfiguration) {
+  constructor(nickName: string, configuration:RTCConfiguration, incomeTrackStrategy: IncomeTrackStrategy = IncomeTrackStrategy.NONE) {
     this.nickName = nickName;
     this.localCandidates = [];
     this.remoteCandidates = [];
     this.streams = [];
+    this.incomeTrackStrategy = incomeTrackStrategy;
 
     this.peerConnection = Rtc.createPeerConnection(this.nickName, configuration);
     this.peerConnection.onsignalingstatechange = this.onStateChange.bind(this);
@@ -23,6 +26,7 @@ export class PeerConnectionClient {
   }
 
   close():void {
+    PCLogger.debug(`[${this.nickName}] connection closing`);
     this.streams.forEach((stream) => {
       stream.getTracks().forEach(track => track.stop());
     });
@@ -34,9 +38,9 @@ export class PeerConnectionClient {
     return this.peerConnection.createOffer(options).then((offer: RTCSessionDescription) => {
       PCLogger.debug(`[${this.nickName}] offer has been created: ${JSON.stringify(offer)}`);
       return offer;
-    },                                                   (err: Error) => {
+    }).catch((err: Error) => {
       PCLogger.error(`[${this.nickName}] offer created failed: ${err.message}`);
-      return err;
+      return Promise.reject(err);
     });
   }
 
@@ -44,9 +48,9 @@ export class PeerConnectionClient {
     return this.peerConnection.createAnswer(options).then((answer:RTCSessionDescription) => {
       PCLogger.debug(`[${this.nickName}] answer has been created: ${JSON.stringify(answer)}`);
       return answer;
-    },                                                    (err: Error) => {
+    }).catch((err: Error) => {
       PCLogger.error(`[${this.nickName}] answer created failed - ${err.message}`);
-      return err;
+      return Promise.reject(err);
     });
   }
 
@@ -68,57 +72,51 @@ export class PeerConnectionClient {
 
   addTracksFromMediaStream(stream: MediaStream):void {
     this.streams.push(stream);
-    return stream.getTracks().forEach(track => this.peerConnection.addTrack(track, stream));
+    stream.getTracks().forEach(track => this.peerConnection.addTrack(track, stream));
   }
 
-  addTracksFromMediaStreamPromise(streamF: Promise<MediaStream>):Promise<any> {
-    return streamF.then((stream:MediaStream) => {
-      this.streams.push(stream);
-      return stream.getTracks().forEach(track => this.peerConnection.addTrack(track, stream));
-    }).catch((error: any) => {
-      PCLogger.error(error);
-      return error;
-    });
-  }
-
-  // TODO: handle error properly
-  setLocalSDP(offer: RTCSessionDescription):Promise<void> {
-    return this.peerConnection.setLocalDescription(offer, () => {
+  setLocalSDP(offer: RTCSessionDescriptionInit):Promise<void> {
+    return this.peerConnection.setLocalDescription(offer).then(() => {
       PCLogger.debug(`[${this.nickName}] local sdp has been successfully set:${JSON.stringify(this.getLocalSdp())}`);
-    },                                             (err: any) => {
-      PCLogger.error(`[${this.nickName}] local sdp set failed: ${JSON.stringify(err)}`);
+    }).catch((err:any) => {
+      PCLogger.error(`[${this.nickName}] local sdp set failed: ${err}`);
+      return Promise.reject(err);
     });
   }
 
-  // TODO: handle error properly
-  setRemoteSDP(remoteOffer: RTCSessionDescription):Promise<void> {
-    return this.peerConnection.setRemoteDescription(remoteOffer, () => {
+  setRemoteSDP(remoteOffer: RTCSessionDescriptionInit):Promise<void> {
+    return this.peerConnection.setRemoteDescription(remoteOffer).then(() => {
       PCLogger.debug(`[${this.nickName}] remote sdp has been successfully set:${JSON.stringify(this.getRemoteSdp())}`);
-    },                                              (err: any) => {
+    }).catch((err: any) => {
       PCLogger.error(`[${this.nickName}] remote sdp set failed: ${err}`);
+      return Promise.reject(err);
     });
   }
 
-  getLocalCandidates():RTCIceCandidate[] {
+  getLocalCandidates():RTCIceCandidateInit[] {
     return this.localCandidates;
   }
 
-  getRemoteCandidates(): RTCIceCandidate[] {
+  getRemoteCandidates(): RTCIceCandidateInit[] {
     return this.remoteCandidates;
   }
 
-  addRemoteIceCandidate(candidate: RTCIceCandidate):Promise<void> {
+  addRemoteIceCandidate(candidate: RTCIceCandidateInit):Promise<void> {
     return this.peerConnection.addIceCandidate(candidate).then(() => {
       this.remoteCandidates.push(candidate);
       PCLogger.debug(`[${this.nickName}] remote ice candidate has been added successfully => ${JSON.stringify(candidate)}`);
     }).catch((err:Error) => {
       PCLogger.error(`[${this.nickName}] remote ice candidate added failed => ${JSON.stringify(candidate)}`);
-      return err;
+      return Promise.reject(err);
     });
   }
 
   private onTrack(trackEvent: RTCTrackEvent) {
     PCLogger.debug(`[${this.nickName}] Receive Track: Kind = ${trackEvent.track.kind} , ID = ${trackEvent.track.id}`);
+    if (this.incomeTrackStrategy === IncomeTrackStrategy.LOOP_BACK) {
+      this.peerConnection.addTrack(trackEvent.track, ...trackEvent.streams);
+      PCLogger.debug(`[${this.nickName}] Received track will be looped back`);
+    }
   }
 
   private onIceCandidate(event: RTCPeerConnectionIceEvent) {

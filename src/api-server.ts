@@ -3,7 +3,7 @@ import * as http from 'http';
 import cors from 'cors';
 import {ServerLogger} from "./logger";
 import {AddressInfo} from "net";
-import {Server} from "typescript-rest";
+import {HttpError, Server} from "typescript-rest";
 import services from './services';
 
 export class ApiServer {
@@ -22,11 +22,28 @@ export class ApiServer {
 
   constructor() {
     this.app = express();
-    this.app.use(cors(this.options));
     Server.buildServices(this.app, ...services);
   }
 
+  private config() {
+    this.app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      if (err instanceof HttpError){
+        if (res.headersSent) {
+          return next(err)
+        }
+        res.set("Content-Type", "application/json");
+        res.status(err.statusCode);
+        res.json({error : err.message, code: err.statusCode});
+      } else {
+        next(err);
+      }
+    });
+    this.app.use(cors(this.options));
+  }
+
   start(): Promise<any> {
+    this.config();
+
     return new Promise<any>((resolve, reject) => {
       this.server = this.app.listen(this.PORT, this.HOST,(err: any) => {
         if (err) {
@@ -42,7 +59,7 @@ export class ApiServer {
   }
 
   stop(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       if (this.server) {
         this.server.close(() => {
           return resolve(true);

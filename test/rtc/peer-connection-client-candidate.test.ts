@@ -1,5 +1,5 @@
 import { PeerConnectionClient } from '../../src/rtc/peer-connection-client';
-import { mockPeerConnectionClient, sleep } from '../mock';
+import { mockedPeerConnectionClient, sleep } from '../mock';
 const expect = require('chai').expect;
 
 describe('peer connection client', () => {
@@ -8,7 +8,7 @@ describe('peer connection client', () => {
   let you: PeerConnectionClient;
 
   it('receive local candidate', async () => {
-    me = await mockPeerConnectionClient('p1');
+    me = await mockedPeerConnectionClient('p1');
     const offer = await me.createOffer();
     await me.setLocalSDP(offer);
     await sleep(1000);
@@ -16,8 +16,8 @@ describe('peer connection client', () => {
   });
 
   it('receive remote candidate', async () => {
-    me = await mockPeerConnectionClient('p1');
-    you = await mockPeerConnectionClient('p2');
+    me = await mockedPeerConnectionClient('p1');
+    you = await mockedPeerConnectionClient('p2');
 
     const callerOffer = await you.createOffer();
     await you.setLocalSDP(callerOffer);
