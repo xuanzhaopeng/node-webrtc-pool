@@ -1,7 +1,7 @@
 # node-webrtc-pool
 
 <p align="center">
-  <img height="120px" src="https://raw.githubusercontent.com/Microsoft/TypeScript/master/doc/logo.svg" />&nbsp;&nbsp;&nbsp;&nbsp;
+  <img height="120px" src="https://raw.githubusercontent.com/remojansen/logo.ts/master/ts.png" />&nbsp;&nbsp;&nbsp;&nbsp;
   <img height="120px" src="https://webrtc.org/assets/images/webrtc-logo-vert-retro-dist.svg" />
 </p>
 
