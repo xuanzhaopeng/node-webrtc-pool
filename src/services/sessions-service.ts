@@ -7,7 +7,7 @@ import { IncomeTrackStrategy } from '../rtc/income-track-strategy';
 export class SessionsService {
 
   @POST
-  createSession(@QueryParam('trackStrategy') trackStrategy: IncomeTrackStrategy, rtcConfiguration: RTCConfiguration): Session {
+  createSession(rtcConfiguration: RTCConfiguration, @QueryParam('trackStrategy') trackStrategy?: IncomeTrackStrategy): Session {
     const session = new Session(rtcConfiguration, trackStrategy);
     Sessions.add(session);
     return session;

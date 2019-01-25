@@ -1,0 +1,11 @@
+{
+  "swagger": {
+    "outputDirectory": "./swagger",
+    "entryFile": "./src/index.ts",
+    "name": "WebRTC Pool Service",
+    "description": "A restful service that manage multiple WebRTC clients",
+    "license": "MIT",
+    "produces": ["application/json"],
+    "version": "0.0.1"
+  }
+}

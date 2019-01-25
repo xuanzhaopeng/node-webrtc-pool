@@ -10,19 +10,19 @@ describe('sessions service', () => {
   let session:Session;
 
   it('create session', () => {
-    session = sessionsService.createSession(IncomeTrackStrategy.NONE, {});
+    session = sessionsService.createSession({}, IncomeTrackStrategy.NONE);
     expect(session).to.not.be.undefined.and.null;
     expect(session.id).to.not.be.empty;
     expect(session.createTime).to.be.greaterThan(0);
-    expect(session.peerConnectionClient).to.not.be.undefined.and.null;
+    expect(session.getPC()).to.not.be.undefined.and.null;
     expect(Sessions.get(session.id)).to.not.be.undefined.and.null;
 
-    const pc = session.peerConnectionClient;
+    const pc = session.getPC();
     expect(pc.getConnectionState()).to.equal('new');
   });
 
   it('delete session', () => {
-    session = sessionsService.createSession(0, {});
+    session = sessionsService.createSession({}, IncomeTrackStrategy.NONE);
     sessionsService.deleteSession(session.id);
     expect(Sessions.get(session.id)).to.be.undefined;
     expect(Sessions.countOfSessions()).to.equal(0);

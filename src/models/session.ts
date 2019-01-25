@@ -5,9 +5,9 @@ import { IncomeTrackStrategy } from '../rtc/income-track-strategy';
 export class Session {
   public readonly id: string;
   public readonly createTime: number;
-  public readonly peerConnectionClient: PeerConnectionClient;
+  private readonly peerConnectionClient: PeerConnectionClient;
 
-  constructor(rtcConfiguration: RTCConfiguration, trackStrategy: IncomeTrackStrategy) {
+  constructor(rtcConfiguration: RTCConfiguration, trackStrategy?: IncomeTrackStrategy) {
     this.id = uuid();
     this.createTime = Date.now();
     this.peerConnectionClient = new PeerConnectionClient(this.id, rtcConfiguration, trackStrategy);
@@ -22,5 +22,9 @@ export class Session {
       id: this.id,
       createTime: this.createTime,
     };
+  }
+
+  getPC():PeerConnectionClient {
+    return this.peerConnectionClient;
   }
 }

@@ -21,7 +21,7 @@ export namespace Sessions {
   }
 
   export function getPeerConnection(id: string):Promise<PeerConnectionClient> {
-    return sessions[id] ? Promise.resolve(sessions[id].peerConnectionClient) : Promise.reject(`session ${id} not found`);
+    return sessions[id] ? Promise.resolve(sessions[id].getPC()) : Promise.reject(`session ${id} not found`);
   }
 
   export function destroy(id: string) {

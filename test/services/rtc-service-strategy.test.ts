@@ -14,7 +14,7 @@ describe('rtc service strategy', () => {
   const sessionsService = new SessionsService();
   const rtcService = new RtcService();
   const createSession: (strategy: IncomeTrackStrategy) => Session = (strategy: IncomeTrackStrategy) => {
-    return sessionsService.createSession(strategy, mockedPeerConnectionConfig);
+    return sessionsService.createSession(mockedPeerConnectionConfig, strategy);
   };
 
   it('support loop back', (done) => {
@@ -39,7 +39,7 @@ describe('rtc service strategy', () => {
       return Promise.all(candidatesOfSenderSession.map(candidate => rtcService.addRemoteCandidate(loopBackSession.id, candidate)));
     }).then(() => {
       return sleep(500).then(() => {
-        expect(loopBackSession.peerConnectionClient.getSenders()).to.have.length(2);
+        expect(loopBackSession.getPC().getSenders()).to.have.length(2);
         done();
       });
     }).catch((err) => {

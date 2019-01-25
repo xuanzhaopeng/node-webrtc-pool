@@ -17,7 +17,7 @@ describe('rtc service', () => {
 
   it('set fake track', (done) => {
     expect(rtcService.setFakeTrack(sessionId, { audio: true, video: true })).to.be.fulfilled.then(() => {
-      expect(Sessions.get(sessionId).peerConnectionClient.getSenders()).to.have.lengthOf(2);
+      expect(Sessions.get(sessionId).getPC().getSenders()).to.have.lengthOf(2);
       done();
     }).catch((err:any) => {
       done(err);
@@ -26,7 +26,7 @@ describe('rtc service', () => {
 
   it('create offer success', (done) => {
     expect(rtcService.createOffer(sessionId, {})).to.be.fulfilled.then(() => {
-      const localSdp = Sessions.get(sessionId).peerConnectionClient.getLocalSdp();
+      const localSdp = Sessions.get(sessionId).getPC().getLocalSdp();
       expect(localSdp).to.not.be.undefined.and.null;
       expect(localSdp.sdp).to.not.be.empty;
       expect(localSdp.type).to.equal('offer');
@@ -37,7 +37,7 @@ describe('rtc service', () => {
   });
 
   it('create offer failed when peer connection has been closed', (done) => {
-    Sessions.get(sessionId).peerConnectionClient.close();
+    Sessions.get(sessionId).getPC().close();
     expect(rtcService.createOffer(sessionId, {})).to.be.rejectedWith(Error).notify(done);
   });
 
@@ -98,7 +98,7 @@ describe('rtc service', () => {
     }).then((p2Candidates) => {
       expect(p2Candidates).to.have.lengthOf.above(0);
       return expect(rtcService.addRemoteCandidate(sessionId, p2Candidates[0])).to.be.fulfilled.then(() => {
-        expect(Sessions.get(sessionId).peerConnectionClient.getRemoteCandidates()).to.have.length(1);
+        expect(Sessions.get(sessionId).getPC().getRemoteCandidates()).to.have.length(1);
         done();
       });
     }).then(() => {
@@ -112,7 +112,7 @@ describe('rtc service', () => {
   });
 
   beforeEach(() => {
-    const session = sessionsService.createSession(IncomeTrackStrategy.NONE, mockedPeerConnectionConfig);
+    const session = sessionsService.createSession(mockedPeerConnectionConfig, IncomeTrackStrategy.NONE);
     sessionId = session.id;
   });
 

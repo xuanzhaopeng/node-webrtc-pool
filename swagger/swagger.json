@@ -1,0 +1,436 @@
+{
+	"definitions": {
+		"Session": {
+			"description": "",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": ""
+				},
+				"createTime": {
+					"type": "number",
+					"format": "double",
+					"description": ""
+				}
+			},
+			"type": "object",
+			"required": [
+				"id",
+				"createTime"
+			]
+		},
+		"RTCIceServer": {
+			"description": "",
+			"properties": {
+				"credential": {
+					"type": "object",
+					"description": ""
+				},
+				"urls": {
+					"type": "object",
+					"description": ""
+				},
+				"username": {
+					"type": "object",
+					"description": ""
+				}
+			},
+			"type": "object"
+		},
+		"RTCConfiguration": {
+			"description": "",
+			"properties": {
+				"bundlePolicy": {
+					"type": "string",
+					"enum": [
+						"balanced",
+						"max-compat",
+						"max-bundle"
+					],
+					"description": ""
+				},
+				"iceServers": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/RTCIceServer"
+					},
+					"description": ""
+				},
+				"iceTransportPolicy": {
+					"type": "string",
+					"enum": [
+						"none",
+						"relay",
+						"all"
+					],
+					"description": ""
+				},
+				"peerIdentity": {
+					"type": "string",
+					"description": ""
+				}
+			},
+			"type": "object"
+		},
+		"MediaStreamConstraints": {
+			"description": "",
+			"properties": {
+				"audio": {
+					"type": "object",
+					"description": ""
+				},
+				"video": {
+					"type": "object",
+					"description": ""
+				}
+			},
+			"type": "object"
+		},
+		"RTCSessionDescriptionInit": {
+			"description": "",
+			"properties": {
+				"sdp": {
+					"type": "string",
+					"description": ""
+				},
+				"type": {
+					"type": "string",
+					"enum": [
+						"offer",
+						"pranswer",
+						"answer"
+					],
+					"description": ""
+				}
+			},
+			"type": "object"
+		},
+		"RTCOfferOptions": {
+			"description": "",
+			"properties": {
+				"iceRestart": {
+					"type": "boolean",
+					"description": ""
+				},
+				"offerToReceiveAudio": {
+					"type": "number",
+					"format": "double",
+					"description": ""
+				},
+				"offerToReceiveVideo": {
+					"type": "number",
+					"format": "double",
+					"description": ""
+				},
+				"voiceActivityDetection": {
+					"type": "boolean",
+					"description": ""
+				}
+			},
+			"type": "object"
+		},
+		"RTCIceCandidateInit": {
+			"description": "",
+			"properties": {
+				"candidate": {
+					"type": "string",
+					"description": ""
+				},
+				"sdpMLineIndex": {
+					"type": "number",
+					"format": "double",
+					"description": ""
+				},
+				"sdpMid": {
+					"type": "string",
+					"description": ""
+				}
+			},
+			"type": "object"
+		}
+	},
+	"info": {
+		"description": "A restful service that manage multiple WebRTC clients",
+		"license": {
+			"name": "MIT"
+		},
+		"title": "WebRTC Pool Service",
+		"version": "0.0.1"
+	},
+	"paths": {
+		"/sessions": {
+			"post": {
+				"operationId": "SessionsServiceCreateSession",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Session"
+						}
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "rtcConfiguration",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/RTCConfiguration"
+						}
+					},
+					{
+						"description": "",
+						"in": "query",
+						"name": "trackStrategy",
+						"required": false,
+						"type": "string"
+					}
+				]
+			},
+			"delete": {
+				"operationId": "SessionsServiceDeleteSession",
+				"produces": [
+					"text/html"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/empty-stream": {
+			"post": {
+				"operationId": "RtcServiceSetFakeTrack",
+				"produces": [
+					"text/html"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "mediaStreamConstrains",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/MediaStreamConstraints"
+						}
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/offer": {
+			"post": {
+				"operationId": "RtcServiceCreateOffer",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/RTCSessionDescriptionInit"
+						}
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "rtcOfferOptions",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/RTCOfferOptions"
+						}
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/remote-sdp": {
+			"put": {
+				"operationId": "RtcServiceSetRemoteSdp",
+				"produces": [
+					"text/html"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "remoteSdp",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/RTCSessionDescriptionInit"
+						}
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/answer": {
+			"post": {
+				"operationId": "RtcServiceCreateAnswer",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/RTCSessionDescriptionInit"
+						}
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "rtcOfferOptions",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/RTCOfferOptions"
+						}
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/local-candidates": {
+			"get": {
+				"operationId": "RtcServiceGetLocalCandidates",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/RTCIceCandidateInit"
+							}
+						}
+					}
+				},
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/session/{sessionId}/rtc/remote-candidates": {
+			"post": {
+				"operationId": "RtcServiceAddRemoteCandidate",
+				"produces": [
+					"text/html"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "remoteCandidate",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/RTCIceCandidateInit"
+						}
+					}
+				]
+			}
+		}
+	},
+	"swagger": "2.0",
+	"securityDefinitions": {},
+	"produces": [
+		"application/json"
+	]
+}

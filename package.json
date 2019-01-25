@@ -1,17 +1,19 @@
 {
   "name": "webrtc-pool-service",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "./node_modules/.bin/ts-node src/index.ts",
     "lint": "tslint --fix ./src/**/*.ts ./test/**/*.ts",
-    "build": "npm run lint && rm -rf dist && tsc --outDir dist",
-    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 test/**/*.test.ts"
+    "build": "npm run lint && rm -rf dist && tsc --outDir dist && npm run swagger",
+    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 test/**/*.test.ts",
+    "swagger": "swaggerGen -c ./swagger.config.json && swaggerGen -c ./swagger/swagger.doc.config.json"
   },
   "dependencies": {
     "cors": "^2.8.4",
     "log4js": "^3.0.6",
     "typescript-rest": "^1.8.1",
+    "typescript-rest-swagger": "0.0.22",
     "uuid": "^3.3.2",
     "wrtc": "^0.3.5"
   },
