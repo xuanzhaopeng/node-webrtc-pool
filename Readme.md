@@ -1,6 +1,7 @@
 # node-webrtc-pool
 
-[![Build Status](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool.svg?branch=master)](https://travis-ci.org/xuanzhaopeng/tam)
+[![codecov](https://codecov.io/gh/xuanzhaopeng/node-webrtc-pool/branch/master/graph/badge.svg)](https://codecov.io/gh/xuanzhaopeng/node-webrtc-pool)
+[![Build Status](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool.svg?branch=master)](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool)
 
 *This project is still in WIP*
 

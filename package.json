@@ -6,7 +6,9 @@
     "start": "./node_modules/.bin/ts-node src/index.ts",
     "lint": "tslint --fix ./src/**/*.ts ./test/**/*.ts",
     "build": "npm run lint && rm -rf dist && tsc --outDir dist && npm run swagger",
-    "test": "npm run lint && mocha -r ts-node/register --timeout 15000 test/**/*.test.ts",
+    "pretest": "tsc -p .",
+    "test": "npm run lint && nyc mocha -r ts-node/register --timeout 15000 test/**/*.test.ts",
+    "posttest": "nyc report --reporter=json",
     "swagger": "swaggerGen -c ./swagger/swagger.doc.config.json"
   },
   "dependencies": {
@@ -28,6 +30,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "ts-node": "^8.0.1",
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
