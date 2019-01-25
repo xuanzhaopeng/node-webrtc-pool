@@ -1,5 +1,10 @@
 # node-webrtc-pool
 
+<p align="center">
+  <img height="120px" src="https://raw.githubusercontent.com/Microsoft/TypeScript/master/doc/logo.svg" />&nbsp;&nbsp;&nbsp;&nbsp;
+  <img height="120px" src="https://webrtc.org/assets/images/webrtc-logo-vert-retro-dist.svg" />
+</p>
+
 [![codecov](https://codecov.io/gh/xuanzhaopeng/node-webrtc-pool/branch/master/graph/badge.svg)](https://codecov.io/gh/xuanzhaopeng/node-webrtc-pool)
 [![Build Status](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool.svg?branch=master)](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool)
 
