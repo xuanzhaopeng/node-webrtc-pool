@@ -30,3 +30,28 @@ So it means, with help of node-webrtc-pool:
 * You could make E2E calling test based on Appium/Selenium + node-webrtc-pool
 * You could test your STUN/TURN server without any help of your Frontend app.
 * You could run test against in your PRODUCTION environment to monitor your STUN/TURN server in real time 
+
+## Play with it
+> I'm gonna make it as a docker image soon
+
+Understand endpoints:
+```
+https://editor.swagger.io/?url=https://raw.githubusercontent.com/xuanzhaopeng/node-webrtc-pool/master/swagger/swagger.json
+```
+
+From source code
+```bash
+$ git clone https://github.com/xuanzhaopeng/node-webrtc-pool
+$ npm install
+
+# Run tests
+$ npm run test
+
+# Start service
+$ npm run start
+```
+
+Then open following link to try endpoints
+```
+http://localhost:3000/api-docs
+```

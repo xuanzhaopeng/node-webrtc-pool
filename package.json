@@ -7,11 +7,12 @@
     "lint": "tslint --fix ./src/**/*.ts ./test/**/*.ts",
     "build": "npm run lint && rm -rf dist && tsc --outDir dist && npm run swagger",
     "test": "npm run lint && mocha -r ts-node/register --timeout 15000 test/**/*.test.ts",
-    "swagger": "swaggerGen -c ./swagger.config.json && swaggerGen -c ./swagger/swagger.doc.config.json"
+    "swagger": "swaggerGen -c ./swagger/swagger.doc.config.json"
   },
   "dependencies": {
     "cors": "^2.8.4",
     "log4js": "^3.0.6",
+    "swagger-ui-express": "^4.0.2",
     "typescript-rest": "^1.8.1",
     "typescript-rest-swagger": "0.0.22",
     "uuid": "^3.3.2",
@@ -22,6 +23,7 @@
     "@types/cors": "^2.8.4",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.18",
+    "@types/swagger-ui-express": "^3.0.0",
     "@types/uuid": "^3.4.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

@@ -5,6 +5,9 @@ import {ServerLogger} from "./logger";
 import {AddressInfo} from "net";
 import {HttpError, Server} from "typescript-rest";
 import services from './services';
+import * as swaggerDoc from '../swagger/swagger.json';
+
+const swaggerUi = require('swagger-ui-express');
 
 export class ApiServer {
   private readonly app: express.Application;
@@ -39,6 +42,7 @@ export class ApiServer {
       }
     });
     this.app.use(cors(this.options));
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
   }
 
   start(): Promise<any> {
