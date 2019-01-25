@@ -1,5 +1,7 @@
 # node-webrtc-pool
 
+[![Build Status](https://travis-ci.org/xuanzhaopeng/node-webrtc-pool.svg?branch=master)](https://travis-ci.org/xuanzhaopeng/tam)
+
 *This project is still in WIP*
 
 It's a tool to manipulate multiple In-Cloud WebRTC clients through Restful Service.
